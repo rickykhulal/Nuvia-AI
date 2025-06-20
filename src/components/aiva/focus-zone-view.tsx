@@ -89,6 +89,28 @@ export default function FocusZoneView() {
       intervalRef.current = null;
     }
   }, []);
+// ✅ Safe sound playback function
+const playFocusDoneSound = () => {
+  if (audioRef.current) {
+    const audio = audioRef.current;
+    audio.muted = false;
+    audio.currentTime = 0;
+
+    const playAttempt = audio.play();
+
+    if (playAttempt !== undefined) {
+      playAttempt.catch((error) => {
+        console.warn("Browser blocked autoplay:", error);
+
+        toast({
+          title: "Audio Blocked",
+          description: "Browser blocked the sound. Please tap the screen or press Start again to enable audio.",
+          variant: "destructive",
+        });
+      });
+    }
+  }
+};
 
   useEffect(() => {
     if (timerState === 'running') {
@@ -97,16 +119,8 @@ export default function FocusZoneView() {
           if (prevTime <= 1) {
             cleanUpInterval();
             setTimerState('finished');
-            if (audioRef.current) {
-              audioRef.current.play().catch((error) => {
-                console.error("Sound failed to play:", error);
-                toast({
-                  title: "Sound Playback Issue",
-                  description: "Browser prevented sound from playing automatically. Ensure tab is not muted and you've interacted with the page by clicking 'Start'.",
-                  variant: "destructive"
-                });
-              });
-            }
+playFocusDoneSound();
+
             toast({
               title: "Focus Session Complete!",
               description: `${customActivityName || FOCUS_TYPES.find(f=>f.id === focusType)?.label || 'Your'} session has ended. Great job!`,
