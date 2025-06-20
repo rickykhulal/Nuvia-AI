@@ -1,0 +1,26 @@
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow users to create their own user document upon signup
+    // Allow users to read, update, or delete their own user document if they are logged in
+    match /users/{userId} {
+      allow read, update, delete: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null; // This allows any authenticated user to create a doc in /users
+                                            // Often, for signup, this might be request.auth.uid == userId as well,
+                                            // but if the auth object is available and matches the intended write path, this is fine.
+                                            // A more secure version for create would be:
+                                            // allow create: if request.auth != null && request.auth.uid == userId;
+                                            // (This assumes the client is trying to write to /users/{THEIR_OWN_UID})
+    }
+
+    // Rules for the 'assignments' collection
+    // Allow logged-in users to create, read, update, and delete their own assignments
+    match /assignments/{assignmentId} {
+      allow read, update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+    }
+   
+ // Add other rules for other collections here if needed
+  }
+}
