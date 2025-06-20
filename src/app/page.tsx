@@ -1,12 +1,14 @@
+'use client';
 
-"use client";
-
+import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import AppShell from '@/components/aiva/app-shell';
 import { Loader2 } from 'lucide-react';
-import { auth, onAuthStateChanged } from '@/lib/firebase'; 
+import { auth, onAuthStateChanged } from '@/lib/firebase';
 import type { User as FirebaseUser } from 'firebase/auth';
+
+// Dynamically import AppShell with no SSR
+const AppShell = dynamic(() => import('@/components/aiva/app-shell'), { ssr: false });
 
 export default function Home() {
   const router = useRouter();
@@ -14,17 +16,20 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setAuthUser(user);
-      } else {
-        setAuthUser(null);
-        router.replace('/auth');
-      }
-      setIsLoading(false);
-    });
+    // Prevents Firebase from running on server
+    if (typeof window !== 'undefined') {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setAuthUser(user);
+        } else {
+          setAuthUser(null);
+          router.replace('/auth');
+        }
+        setIsLoading(false);
+      });
 
-    return () => unsubscribe(); 
+      return () => unsubscribe();
+    }
   }, [router]);
 
   if (isLoading) {
@@ -37,17 +42,13 @@ export default function Home() {
   }
 
   if (!authUser) {
-    // This case is typically handled by the redirect in useEffect,
-    // but serves as a fallback or if redirect hasn't completed.
-     return (
+    return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
-         <p className="mt-4 text-muted-foreground">Redirecting to login...</p>
+        <p className="mt-4 text-muted-foreground">Redirecting to login...</p>
       </div>
     );
   }
 
-  // If authorized, render the AppShell
   return <AppShell />;
 }
-    
