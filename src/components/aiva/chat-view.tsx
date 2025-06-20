@@ -505,14 +505,17 @@ export default function ChatView() {
   placeholder="Type your message..."
   disabled={isLoading}
   rows={1}
-  className="flex-1 resize-none rounded-md border bg-input px-4 py-2 text-sm text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-primary sm:text-base"
+  className="flex-1 resize-none rounded-md border bg-input px-4 py-2 text-sm text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-primary sm:text-base placeholder:text-muted-foreground"
   style={{
     minHeight: '40px',
-    maxHeight: '150px',
+    maxHeight: '200px',
     overflowY: 'auto',
     lineHeight: '1.5',
+    whiteSpace: 'pre-wrap',
   }}
 />
+
+
 
           <Button onClick={handleSend} disabled={isLoading || (!currentInput.trim() && !selectedMedia.dataUrl)} className="bg-primary hover:bg-primary/90 text-primary-foreground">
             {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
