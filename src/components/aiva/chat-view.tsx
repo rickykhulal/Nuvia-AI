@@ -493,15 +493,27 @@ export default function ChatView() {
           >
             {isRecording ? <StopCircle className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
           </Button>
-          <Input
-            type="text"
-            placeholder="Type your message..."
-            value={currentInput}
-            onChange={(e) => setCurrentInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && !isLoading && handleSend()}
-            disabled={isLoading}
-            className="flex-1 bg-input focus-visible:ring-accent"
-          />
+         <textarea
+  value={currentInput}
+  onChange={(e) => setCurrentInput(e.target.value)}
+  onKeyDown={(e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      !isLoading && handleSend();
+    }
+  }}
+  placeholder="Type your message..."
+  disabled={isLoading}
+  rows={1}
+  className="flex-1 resize-none rounded-md border bg-input px-4 py-2 text-sm text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-primary sm:text-base"
+  style={{
+    minHeight: '40px',
+    maxHeight: '150px',
+    overflowY: 'auto',
+    lineHeight: '1.5',
+  }}
+/>
+
           <Button onClick={handleSend} disabled={isLoading || (!currentInput.trim() && !selectedMedia.dataUrl)} className="bg-primary hover:bg-primary/90 text-primary-foreground">
             {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
             <span className="sr-only">Send</span>
