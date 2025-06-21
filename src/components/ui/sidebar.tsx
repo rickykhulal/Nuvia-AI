@@ -12,6 +12,8 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { Skeleton } from "@/components/ui/skeleton"
+import FeedbackButton from "@/components/feedback/FeedbackButton";
+
 import {
   Tooltip,
   TooltipContent,
