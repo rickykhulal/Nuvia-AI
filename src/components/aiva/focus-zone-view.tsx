@@ -137,34 +137,52 @@ playFocusDoneSound();
   }, [timerState, toast, customActivityName, focusType, cleanUpInterval]);
 
 
-  const handleStart = () => {
-    if (focusType === 'custom' && !customActivityName.trim()) {
-      toast({ title: "Custom Activity Name Needed", description: "Please enter a name for your custom activity.", variant: "destructive" });
-      return;
-    }
-    if (selectedDuration <= 0) {
-        toast({ title: "Invalid Duration", description: "Please set a duration greater than 0.", variant: "destructive" });
-        return;
-    }
+ const handleStart = () => {
+  if (focusType === 'custom' && !customActivityName.trim()) {
+    toast({
+      title: "Custom Activity Name Needed",
+      description: "Please enter a name for your custom activity.",
+      variant: "destructive"
+    });
+    return;
+  }
 
-    if (audioRef.current) {
-      const currentAudio = audioRef.current;
-      currentAudio.muted = true; 
-      currentAudio.play()
-        .then(() => {
-          currentAudio.pause();
-          currentAudio.currentTime = 0;
-          currentAudio.muted = false; 
-        })
-        .catch(err => {
-          console.warn("Audio priming/unlock attempt failed (this is sometimes expected):", err);
-           if (currentAudio) currentAudio.muted = false; 
+  if (selectedDuration <= 0) {
+    toast({
+      title: "Invalid Duration",
+      description: "Please set a duration greater than 0.",
+      variant: "destructive"
+    });
+    return;
+  }
+
+  // ✅ Attempt to unlock audio on first user interaction
+  if (audioRef.current) {
+    const audio = audioRef.current;
+    audio.muted = false;
+    audio.currentTime = 0;
+
+    const unlockAudio = async () => {
+      try {
+        await audio.play();
+        audio.pause();
+        audio.currentTime = 0;
+      } catch (err) {
+        console.warn("🔇 Audio autoplay blocked:", err);
+        toast({
+          title: "Audio Blocked",
+          description: "Browser blocked the sound. Please tap the screen or press Start again to enable audio.",
+          variant: "destructive"
         });
-    }
+      }
+    };
 
-    setTimeLeft(selectedDuration); 
-    setTimerState('running');
-  };
+    unlockAudio();
+  }
+
+  setTimeLeft(selectedDuration);
+  setTimerState('running');
+};
 
   const handlePause = () => setTimerState('paused');
   const handleResume = () => setTimerState('running');
@@ -342,6 +360,8 @@ playFocusDoneSound();
       </CardFooter>
 
       <audio ref={audioRef} src="/sounds/new-alarm-sound.mp3" preload="auto"></audio>
+
+
     </Card>
   );
 }
