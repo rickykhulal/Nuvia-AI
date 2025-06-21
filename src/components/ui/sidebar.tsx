@@ -377,12 +377,12 @@ const SidebarFooter = React.forwardRef<
       data-sidebar="footer"
       className={cn("flex flex-col gap-2 p-2", className)}
       {...props}
-    >
-      <FeedbackButton />
-    </div>
+    />
   )
 })
 SidebarFooter.displayName = "SidebarFooter"
+
+
 
 
 const SidebarSeparator = React.forwardRef<
