@@ -1,4 +1,3 @@
-
 "use client";
 
 import type { Dispatch, SetStateAction } from 'react';
@@ -10,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { auth, signOut, onAuthStateChanged } from '@/lib/firebase';
 import type { User as FirebaseUser } from 'firebase/auth';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
+import FeedbackButton from "@/components/feedback/FeedbackButton"; // ✅ Imported
 
 type ViewName = 'chat' | 'tasks' | 'summarizer' | 'analyzer' | 'playgame' | 'contentStudio' | 'assignmentTracker' | 'focusZone' | 'routineBuilder';
 
@@ -135,6 +134,12 @@ export default function SidebarNav({ activeView, setActiveView }: SidebarNavProp
             <span className="group-data-[collapsible=icon]:hidden">Logout</span>
           </SidebarMenuButton>
         </SidebarMenuItem>
+
+        {/* ✅ Feedback Button added below logout */}
+        <SidebarMenuItem>
+          <FeedbackButton />
+        </SidebarMenuItem>
+
         <div className={`flex flex-col items-center group-data-[collapsible=icon]:hidden mt-2 ${isMobile ? 'pt-2' : 'p-2'}`}>
           <Bot className="h-8 w-8 text-muted-foreground mb-1"/>
           <p className="text-xs text-muted-foreground">Nuvia v1.0</p>
@@ -143,4 +148,3 @@ export default function SidebarNav({ activeView, setActiveView }: SidebarNavProp
     </div>
   );
 }
-
