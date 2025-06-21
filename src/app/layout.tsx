@@ -8,7 +8,6 @@ export const metadata: Metadata = {
   title: 'Nuvia - Your Smart AI Assistant',
   description: 'Nuvia – Think Smarter. Work Faster.',
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{
