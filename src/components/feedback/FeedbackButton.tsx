@@ -1,67 +1,27 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { toast } from '@/components/ui/use-toast';
+import { useState } from "react";
+import { MessageCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-export default function FeedbackClientWrapper() {
-  const [show, setShow] = useState(false);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+// Optional: Replace this with your real modal/form logic
+export default function FeedbackButton() {
+  const [clicked, setClicked] = useState(false);
 
-  const handleSubmit = () => {
-    if (!name || !email || !message) {
-      toast({ title: "All fields required", description: "Please fill in all fields.", variant: "destructive" });
-      return;
-    }
-
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = "https://formsubmit.co/nuviatechltd@gmail.com"; // 🔁 Replace with your email
-
-    [ ['name', name], ['email', email], ['message', message] ].forEach(([n, v]) => {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = n as string;
-      input.value = v as string;
-      form.appendChild(input);
-    });
-
-    document.body.appendChild(form);
-    form.submit();
+  const handleClick = () => {
+    // You can replace this with a modal, Google Form, or redirect
+    window.open("https://forms.gle/your-google-form-url", "_blank"); // example
+    setClicked(true);
   };
 
   return (
-    <>
-      {/* Feedback Button */}
-      <div className="fixed bottom-5 left-5 z-50">
-        <Button
-          onClick={() => setShow(true)}
-          variant="outline"
-          className="shadow-md"
-        >
-          💬 Feedback
-        </Button>
-      </div>
-
-      {/* Modal */}
-      {show && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
-          <div className="bg-white dark:bg-zinc-900 rounded-lg p-6 w-full max-w-md shadow-lg space-y-4">
-            <h2 className="text-xl font-bold text-foreground">Send Feedback</h2>
-            <Input placeholder="Your Name" value={name} onChange={(e) => setName(e.target.value)} />
-            <Input placeholder="Your Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <Textarea placeholder="Your Message" value={message} onChange={(e) => setMessage(e.target.value)} />
-            <div className="flex justify-end gap-2">
-              <Button variant="ghost" onClick={() => setShow(false)}>Cancel</Button>
-              <Button onClick={handleSubmit}>Send</Button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+    <Button
+      onClick={handleClick}
+      variant="ghost"
+      className="w-full justify-start text-left"
+    >
+      <MessageCircle className="h-4 w-4 mr-2" />
+      {clicked ? "Thanks!" : "Feedback"}
+    </Button>
   );
 }
