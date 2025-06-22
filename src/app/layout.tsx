@@ -28,7 +28,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
-          <FeedbackClientWrapper /> {/* 🟢 this is the feedback modal */}
+         // REMOVE or COMMENT OUT this line:
+{/* <FeedbackClientWrapper /> */}
+
           <Toaster />
         </ThemeProvider>
       </body>
