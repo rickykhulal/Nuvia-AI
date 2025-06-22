@@ -28,8 +28,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
-         // REMOVE or COMMENT OUT this line:
-{/* <FeedbackClientWrapper /> */}
+        {/* <FeedbackClientWrapper /> */}
 
           <Toaster />
         </ThemeProvider>
