@@ -19,6 +19,7 @@ import { ThemeToggle } from '@/components/aiva/theme-toggle';
 
 type ViewName = 'chat' | 'tasks' | 'summarizer' | 'analyzer' | 'contentStudio' | 'playgame' | 'assignmentTracker' | 'focusZone' | 'routineBuilder';
 
+// Internal component to correctly handle mobile sidebar toggle using context
 const MobileHeaderToggleButton = () => {
   const { toggleSidebar: contextToggleSidebar } = useSidebar();
   return (
@@ -31,7 +32,7 @@ const MobileHeaderToggleButton = () => {
 
 export default function AppShell() {
   const [activeView, setActiveView] = useState<ViewName>('chat');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // For desktop
   const isMobile = useIsMobile();
   const [isClient, setIsClient] = useState(false);
 
@@ -41,18 +42,13 @@ export default function AppShell() {
 
   useEffect(() => {
     if (isClient) {
-      setSidebarOpen(!isMobile);
+      if (!isMobile) {
+        setSidebarOpen(true);
+      } else {
+        setSidebarOpen(false);
+      }
     }
   }, [isMobile, isClient]);
-
-  // 👉 Adsterra script loader
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "//pl26988072.profitableratecpm.com/0fbfdd5c0b09f7a7aae82dfcae1b1e81/invoke.js";
-    script.async = true;
-    script.setAttribute("data-cfasync", "false");
-    document.getElementById("adsterra-banner")?.appendChild(script);
-  }, []);
 
   if (!isClient) {
     return (
@@ -65,7 +61,7 @@ export default function AppShell() {
               <p className="text-xs text-muted-foreground">Think Smarter. Work Faster.</p>
             </div>
           </div>
-          <div className="h-9 w-9 bg-muted rounded-md animate-pulse" />
+          <div className="h-9 w-9 bg-muted rounded-md animate-pulse" /> {/* Placeholder for ThemeToggle during SSR */}
         </header>
         <div className="flex flex-1 items-center justify-center">
           <Loader2 className="h-10 w-10 animate-spin text-primary" />
@@ -86,26 +82,15 @@ export default function AppShell() {
               <p className="text-xs text-muted-foreground">Think Smarter. Work Faster.</p>
             </div>
           </div>
-
-          <div className="flex items-center gap-4">
-            <a
-              href="https://www.profitableratecpm.com/ynu12snm39?key=506238efd6b47bdb8bc07821b427ba27"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-blue-600 hover:underline"
-            >
-              💰 Sponsored Ad
-            </a>
-            <ThemeToggle />
-          </div>
+          <ThemeToggle />
         </header>
-
         <div className="flex flex-1">
           <Sidebar
             variant="sidebar"
             collapsible={isMobile ? "offcanvas" : "icon"}
             className="border-r shadow-md data-[collapsible=icon]:bg-sidebar"
             style={{
+              // @ts-ignore
               "--sidebar-width": "280px",
               "--sidebar-width-icon": "56px",
             }}
@@ -114,7 +99,6 @@ export default function AppShell() {
               <SidebarNav activeView={activeView} setActiveView={setActiveView} />
             </SidebarContent>
           </Sidebar>
-
           <SidebarInset className="flex-1 overflow-y-auto bg-background">
             <main className="p-4 sm:p-6 lg:p-8">
               {activeView === 'chat' && <ChatView />}
@@ -126,11 +110,6 @@ export default function AppShell() {
               {activeView === 'assignmentTracker' && <AssignmentTrackerView />}
               {activeView === 'focusZone' && <FocusZoneView />}
               {activeView === 'routineBuilder' && <RoutineBuilderView />}
-
-              {/* 🔻 Native banner ad injected below main content */}
-              <div className="my-6" id="adsterra-banner">
-                <div id="container-0fbfdd5c0b09f7a7aae82dfcae1b1e81" />
-              </div>
             </main>
           </SidebarInset>
         </div>
