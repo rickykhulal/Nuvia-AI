@@ -45,6 +45,15 @@ export default function AppShell() {
     }
   }, [isMobile, isClient]);
 
+  // 👉 Adsterra script loader
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "//pl26988072.profitableratecpm.com/0fbfdd5c0b09f7a7aae82dfcae1b1e81/invoke.js";
+    script.async = true;
+    script.setAttribute("data-cfasync", "false");
+    document.getElementById("adsterra-banner")?.appendChild(script);
+  }, []);
+
   if (!isClient) {
     return (
       <div className="flex min-h-screen flex-col bg-background">
@@ -78,7 +87,6 @@ export default function AppShell() {
             </div>
           </div>
 
-          {/* 👇 Adsterra link + ThemeToggle */}
           <div className="flex items-center gap-4">
             <a
               href="https://www.profitableratecpm.com/ynu12snm39?key=506238efd6b47bdb8bc07821b427ba27"
@@ -106,6 +114,7 @@ export default function AppShell() {
               <SidebarNav activeView={activeView} setActiveView={setActiveView} />
             </SidebarContent>
           </Sidebar>
+
           <SidebarInset className="flex-1 overflow-y-auto bg-background">
             <main className="p-4 sm:p-6 lg:p-8">
               {activeView === 'chat' && <ChatView />}
@@ -117,6 +126,11 @@ export default function AppShell() {
               {activeView === 'assignmentTracker' && <AssignmentTrackerView />}
               {activeView === 'focusZone' && <FocusZoneView />}
               {activeView === 'routineBuilder' && <RoutineBuilderView />}
+
+              {/* 🔻 Native banner ad injected below main content */}
+              <div className="my-6" id="adsterra-banner">
+                <div id="container-0fbfdd5c0b09f7a7aae82dfcae1b1e81" />
+              </div>
             </main>
           </SidebarInset>
         </div>
