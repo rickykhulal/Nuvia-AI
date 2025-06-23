@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -20,7 +19,6 @@ import { ThemeToggle } from '@/components/aiva/theme-toggle';
 
 type ViewName = 'chat' | 'tasks' | 'summarizer' | 'analyzer' | 'contentStudio' | 'playgame' | 'assignmentTracker' | 'focusZone' | 'routineBuilder';
 
-// Internal component to correctly handle mobile sidebar toggle using context
 const MobileHeaderToggleButton = () => {
   const { toggleSidebar: contextToggleSidebar } = useSidebar();
   return (
@@ -33,7 +31,7 @@ const MobileHeaderToggleButton = () => {
 
 export default function AppShell() {
   const [activeView, setActiveView] = useState<ViewName>('chat');
-  const [sidebarOpen, setSidebarOpen] = useState(false); // For desktop
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
   const [isClient, setIsClient] = useState(false);
 
@@ -43,11 +41,7 @@ export default function AppShell() {
 
   useEffect(() => {
     if (isClient) {
-      if (!isMobile) {
-        setSidebarOpen(true);
-      } else {
-        setSidebarOpen(false);
-      }
+      setSidebarOpen(!isMobile);
     }
   }, [isMobile, isClient]);
 
@@ -62,7 +56,7 @@ export default function AppShell() {
               <p className="text-xs text-muted-foreground">Think Smarter. Work Faster.</p>
             </div>
           </div>
-          <div className="h-9 w-9 bg-muted rounded-md animate-pulse" /> {/* Placeholder for ThemeToggle during SSR */}
+          <div className="h-9 w-9 bg-muted rounded-md animate-pulse" />
         </header>
         <div className="flex flex-1 items-center justify-center">
           <Loader2 className="h-10 w-10 animate-spin text-primary" />
@@ -83,15 +77,27 @@ export default function AppShell() {
               <p className="text-xs text-muted-foreground">Think Smarter. Work Faster.</p>
             </div>
           </div>
-          <ThemeToggle />
+
+          {/* 👇 Adsterra link + ThemeToggle */}
+          <div className="flex items-center gap-4">
+            <a
+              href="https://www.profitableratecpm.com/ynu12snm39?key=506238efd6b47bdb8bc07821b427ba27"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-blue-600 hover:underline"
+            >
+              💰 Sponsored Ad
+            </a>
+            <ThemeToggle />
+          </div>
         </header>
+
         <div className="flex flex-1">
           <Sidebar
             variant="sidebar"
             collapsible={isMobile ? "offcanvas" : "icon"}
             className="border-r shadow-md data-[collapsible=icon]:bg-sidebar"
             style={{
-              // @ts-ignore
               "--sidebar-width": "280px",
               "--sidebar-width-icon": "56px",
             }}
@@ -118,4 +124,3 @@ export default function AppShell() {
     </SidebarProvider>
   );
 }
-
